@@ -6,18 +6,52 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
 import {DataGrid} from '@mui/x-data-grid';
-import {SEMESTER_LIST} from '../constants.js'
+import {SEMESTER_LIST, SERVER_URL} from '../constants.js'
+import AddStudent from "./AddStudent";
+import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
+import {toast} from "react-toastify";
 
-// user selects from a list of  (year, semester) values
-class Semester extends Component {
+// user selects from a list of (year, semester) values
+export default class Semester extends Component {
     constructor(props) {
         super(props);
-        this.state = {selected: SEMESTER_LIST.length - 1};
+        this.state = {selected: SEMESTER_LIST.length - 1, addedStudent: false};
     }
 
     onRadioClick = (event) => {
         console.log("Semester.onRadioClick " + JSON.stringify(event.target.value));
         this.setState({selected: event.target.value});
+    }
+
+    addStudent = (student) => {
+        const token = Cookies.get('XSRF-TOKEN');
+
+        fetch(`${SERVER_URL}/student`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': token
+                },
+                body: JSON.stringify(student)
+            })
+            .then(res => {
+                if (res.ok) {
+                    toast.success("Student successfully added", {
+                        position: toast.POSITION.BOTTOM_LEFT
+                    });
+                } else {
+                    toast.error("Error when adding", {
+                        position: toast.POSITION.BOTTOM_LEFT
+                    });
+                    console.error('Post http status =' + res.status);
+                }
+            })
+            .catch(err => {
+                    console.error(err);
+                }
+            )
     }
 
     render() {
@@ -29,7 +63,7 @@ class Semester extends Component {
                 renderCell: (params) => (
                     <div>
                         <Radio
-                            checked={params.row.id == this.state.selected}
+                            checked={params.row.id === this.state.selected}
                             onChange={this.onRadioClick}
                             value={params.row.id}
                             color="default"
@@ -64,10 +98,9 @@ class Semester extends Component {
                             variant="outlined" color="primary" style={{margin: 10}}>
                         Get Schedule
                     </Button>
+                    <AddStudent addStudent={this.addStudent}/>
                 </div>
             </div>
         )
     }
 }
-
-export default Semester;
