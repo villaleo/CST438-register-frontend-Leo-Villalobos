@@ -1,18 +1,16 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 
-
-// properties addCourse is required, function called when Add clicked.
-class AddCourse extends Component {
+export default class AddStudent extends Component {
     constructor(props) {
         super(props);
-        this.state = {open: false, course: {}};
+        this.state = {open: false, name: null, email: null};
     };
 
     handleClickOpen = () => {
@@ -23,13 +21,16 @@ class AddCourse extends Component {
         this.setState({open: false});
     };
 
-    handleChange = (event) => {
-        this.setState({course: {course_id: event.target.value}});
+    setName = (event) => {
+        this.setState({name: event.target.value});
     }
 
-    // Save course and close modal form
+    setEmail = (event) => {
+        this.setState({email: event.target.value});
+    }
+
     handleAdd = () => {
-        this.props.addCourse(this.state.course);
+        this.props.addStudent({name: this.state.name, email: this.state.email});
         this.handleClose();
     }
 
@@ -37,12 +38,13 @@ class AddCourse extends Component {
         return (
             <div>
                 <Button variant="outlined" color="primary" style={{margin: 10}} onClick={this.handleClickOpen}>
-                    Add Course
+                    Add Student
                 </Button>
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>Add Course</DialogTitle>
+                    <DialogTitle>Add Student</DialogTitle>
                     <DialogContent style={{paddingTop: 20}}>
-                        <TextField autoFocus fullWidth label="Course Id" name="course_id" onChange={this.handleChange}/>
+                        <TextField autoFocus label="Name" name="name" onChange={this.setName}/>
+                        <TextField label="Email" name="email" onChange={this.setEmail}/>
                     </DialogContent>
                     <DialogActions>
                         <Button color="secondary" onClick={this.handleClose}>Cancel</Button>
@@ -54,9 +56,6 @@ class AddCourse extends Component {
     }
 }
 
-// required property:  addCourse is a function to call to perform the Add action
-AddCourse.propTypes = {
-    addCourse: PropTypes.func.isRequired
+AddStudent.propTypes = {
+    addStudent: PropTypes.func.isRequired
 }
-
-export default AddCourse;
