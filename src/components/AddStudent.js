@@ -37,7 +37,7 @@ export default class AddStudent extends Component {
     render() {
         return (
             <div>
-                <Button variant="outlined" color="primary" style={{margin: 10}} onClick={this.handleClickOpen}>
+                <Button id={"begin_add_student"} variant="outlined" color="primary" style={{margin: 10}} onClick={this.handleClickOpen}>
                     Add Student
                 </Button>
                 <Dialog open={this.state.open} onClose={this.handleClose}>
@@ -47,8 +47,8 @@ export default class AddStudent extends Component {
                         <TextField label="Email" name="email" onChange={this.setEmail}/>
                     </DialogContent>
                     <DialogActions>
-                        <Button color="secondary" onClick={this.handleClose}>Cancel</Button>
-                        <Button id="Add" color="primary" onClick={this.handleAdd}>Add</Button>
+                        <Button id={"cancel_student_add"} color="secondary" onClick={this.handleClose}>Cancel</Button>
+                        <Button id={"student_add"} color="primary" onClick={this.handleAdd}>Add</Button>
                     </DialogActions>
                 </Dialog>
             </div>
